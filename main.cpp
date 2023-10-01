@@ -45,7 +45,7 @@ int main() {
 
             cout << "Įveskite studento egzamino rezultatą: ";
             cin >> studentas.egz;
-        } else {
+        } else if (pasirinkimas == 1){
             int s;
             cout << "Įveskite namų darbų skaičiu: ";
             cin >> s;
@@ -55,12 +55,16 @@ int main() {
                 studentas.nd.push_back(atsitiktinisPazymys);
             }
             studentas.egz = rand() % 10 + 1;
+        } else {
+            cout << "Įvedete neteisingą pirmo klausimo simbolį" <<endl;
         }
 
         if (pasirinkimasgalut == 'v') {
             studentas.galvid = skaiciuotiGalutiniVid(studentas);
         } else if (pasirinkimasgalut == 'm') {
             studentas.galmed = skaiciuotiGalutiniMed(studentas);
+        } else {
+            cout << "Įvedete neteisingą antro klausimo simbolį" << endl;
         }
 
         studentai.push_back(studentas);
