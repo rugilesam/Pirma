@@ -1,12 +1,12 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <iomanip>
-#include "studentai.h" // Įtraukiame studentai.h
 
-using namespace std;
+#include "studentai.h"
+
 
 int main() {
+  char p;
+  cout << "Ar norite vesti duomenys patys(t) ar nuskaityti iš failo(n)?";
+  cin >> p;
+  if (p == 't') {
     vector<Duomenys> studentai;
     int pasirinkimas;
     cout << "Pasirinkite, ar norite vesti rezultatus (0) ar generuoti atsitiktinai (1): ";
@@ -55,8 +55,7 @@ int main() {
                 studentas.nd.push_back(atsitiktinisPazymys);
             }
             studentas.egz = rand() % 10 + 1;
-        } else {
-            cout << "Įvedete neteisingą pirmo klausimo simbolį" <<endl;
+        }else{    cout << "Įvedete neteisingą pirmo klausimo simbolį" <<endl;
         }
 
         if (pasirinkimasgalut == 'v') {
@@ -75,11 +74,11 @@ int main() {
 
     cout << left << setw(15) << "Pavardė" << left << setw(15) << "Vardas" << left << setw(10) << "Galutinis (" << pasirinkimasgalut << ".)" << endl;
     cout << "-------------------------------------------------" << endl;
-    
+
 
     for (const Duomenys& studentas : studentai) {
         cout << left << setw(15) << studentas.pav
-             << left << setw(15) << studentas.vard;
+        << left << setw(15) << studentas.vard;
 
         if (pasirinkimasgalut == 'v' && studentas.galvid > 0) {
             cout << left << setw(20) << fixed << setprecision(2) << studentas.galvid;
@@ -89,6 +88,51 @@ int main() {
 
         cout << endl;
     }
+  } else if (p == 'n'){
+    vector<Duomenys> studentai;
 
+        ifstream failas("studentai.txt");
+
+        if (!failas) {
+                cerr << "Nepavyko atidaryti failo." << endl;
+                return 1;
+        }
+
+        string eilute;
+        while (getline(failas, eilute)) {
+            Duomenys studentas;
+            istringstream iss(eilute);
+            iss >> studentas.pav >> studentas.vard;
+                    int pazymys;
+                    while (iss >> pazymys) {
+                        studentas.nd.push_back(pazymys);
+                    }
+                    iss.clear();
+                    iss >> studentas.egz;
+
+
+                    studentas.galvid = skaiciuotiGalutiniVid(studentas);
+                        studentas.galmed = skaiciuotiGalutiniMed(studentas);
+                    studentai.push_back(studentas);
+                }
+
+                failas.close();
+
+            sort(studentai.begin(), studentai.end(), [](const Duomenys& a, const Duomenys& b) {
+                    return a.vard < b.vard;
+                });
+
+    cout << left << setw(15) << "Pavardė" << left << setw(15) << "Vardas" << left << setw(15) << "Galutinis (vid.)" << left << setw(15) << "Galutinis (med.)" << endl;
+    cout << "-------------------------------------------------" << endl;
+
+
+    for (const Duomenys& studentas : studentai) {
+            cout << left << setw(15) << studentas.pav
+            << left << setw(15) << studentas.vard << left << setw(20) <<     fixed << setprecision(2) << studentas.galvid << left << setw(20) << fixed << setprecision(2) << studentas.galmed <<endl;
+        }
+  } else {
+    cout << "Reikia ivesti simboli t arba n";
+  }
     return 0;
-}
+} 
+
