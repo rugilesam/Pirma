@@ -1,10 +1,3 @@
-//
-//  Timer.h
-//  v0.2
-//
-//  Created by Rugilė Samušytė on 2023-10-19.
-//
-
 #include <chrono>
 
 class Timer {
