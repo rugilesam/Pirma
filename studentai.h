@@ -13,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include <limits>
+using namespace std;
 
 struct Duomenys {
     std::string vard, pav;
