@@ -1,10 +1,4 @@
 #include "studentai.h"
-#include <cstdlib>
-#include <ctime>
-#include <iostream>
-#include <iomanip>
-#include <numeric>
-#include <algorithm>
 
 using namespace std;
 
