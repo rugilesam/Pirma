@@ -73,37 +73,7 @@ int main() {
 
   
     string fileNames[] = {"studentai1000.txt", "studentai10000.txt", "studentai100000.txt", "studentai1000000.txt", "studentai10000000.txt"};
-
     
-    int recordCounts[] = {1000, 10000, 100000, 1000000, 10000000};
-
-    Timer t;
-
-    for (int i = 0; i < 5; i++) {
-        string fileName = fileNames[i];
-        int numRecords = recordCounts[i];
-
-        
-        ofstream file(fileName);
-
-        if (!file.is_open()) {
-            cerr << "Nepavyko atidaryti failo: " << fileName << endl;
-            return 1;
-        }
-
-        
-        for (int j = 1; j <= numRecords; j++) {
-            file << "Vardas" << j << " Pavarde" << j << " ";
-            for (int k = 0; k < 5; k++) {
-                file << generateRandomGrade() << " ";
-            }
-            file << generateRandomGrade() << endl;
-        }
-
-        file.close();
-        cout << "Studentai failas su " << numRecords << " elementų užpildymas užtruko: " << t.elapsed() << " s\n";
-    }
-
     for (const std::string &fileName : fileNames) {
         ifstream failas(fileName);
 
