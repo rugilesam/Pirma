@@ -1,165 +1,155 @@
-#include <string>
-#include <vector>
-#include <iostream>
-#include <string>
-#include <iomanip>
-#include <cstdlib>
-#include <ctime>
-#include <numeric>
-#include <algorithm>
-#include <sstream>
-#include <fstream>
-#include <limits>
-#include <cstdlib>
-#include <ctime>
-#include <chrono>
-#include <list>
+#include "studentai.h"
 
-using namespace std;
-
-struct Duomenys {
-    string vard, pav;
-    int egz;
-    double galvid, galmed;
-    vector<int> nd;
-};
-struct Duomenys1 {
-    string vard, pav;
-    int egz;
-    double galvid, galmed;
-    list<int> nd;
-};
-#include "Timer.h"
-
-int generateRandomGrade() {
-    return rand() % 10 + 1;
-}
-
-double skaiciuotiGalutiniVid(const Duomenys& studentas) {
-    int ndSum = accumulate(studentas.nd.begin(), studentas.nd.end(), 0);
-    return 0.4 * (ndSum / static_cast<double>(studentas.nd.size())) + 0.6 * studentas.egz;
-}
-
-double skaiciuotiGalutiniVid1(const Duomenys1& studentas) {
-    int ndSum = accumulate(studentas.nd.begin(), studentas.nd.end(), 0);
-    return 0.4 * (ndSum / static_cast<double>(studentas.nd.size())) + 0.6 * studentas.egz;
-}
-
-void strategija1(const vector<Duomenys>& studentai, vector<Duomenys>& vargsiukai, vector<Duomenys>& kietiakai) {
-    for (const auto& studentas : studentai) {
-        if (skaiciuotiGalutiniVid(studentas) < 5.0) {
-            vargsiukai.push_back(studentas);
-        } else {
-            kietiakai.push_back(studentas);
-        }
-    }
-}
-
-void strategija2(list<Duomenys1>& studentai, list<Duomenys1>& vargsiukai) {
-    auto it = studentai.begin();
-    while (it != studentai.end()) {
-        if (skaiciuotiGalutiniVid1(*it) < 5.0) {
-            vargsiukai.push_back(*it);
-            it = studentai.erase(it);
-        } else {
-            ++it;
-        }
-    }
-}
 
 int main() {
-  
-    srand(time(0));
+    string gen;
+    string struktura;
+    string ats;
+    string rus_index;
 
-  
-    string fileNames[] = {"studentai1000.txt", "studentai10000.txt", "studentai100000.txt", "studentai1000000.txt", "studentai10000000.txt"};
+
+    cout << "Norite atlikti veiksmus su vector<studentas> (v) ar list <studentas> (l)" << endl;
+    cin >> struktura;
     
-    for (const std::string &fileName : fileNames) {
-        ifstream failas(fileName);
+    if (struktura == "v")
+    {
+        vector<Duomenys> grupe;
 
-        if (!failas.is_open()) {
-            cerr << "Nepavyko atidaryti failo." << endl;
-            return 1;
+
+        while (true) {
+                    string failas;
+                    cout << "Iveskite failo, kuri norite nuskaityti pavadinima (formatas: pavadinimas.txt): ";
+                    cin >> failas;
+                    cout << "Pagal ka noresite rusiuoti rezultatus: p - pavardes, v - vardus, g - galutini bala?\n";
+                    cin >> rus_index;
+
+                    int kiekis = kiek_sk(failas);
+
+                    for (int i = 0; i < 5; i++) {
+
+                        cout << endl << endl;
+                        cout << i + 1 << " nuskaitymas" << endl;
+
+                        auto Nuskaitymo_start = chrono::high_resolution_clock::now();
+                        nuskaitymas(failas, grupe);
+                        auto Nuskaitymo_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Nuskaitymo_laikas = Nuskaitymo_end - Nuskaitymo_start;
+                        cout << kiekis << " irasu nuskaitymas uztruko: " << Nuskaitymo_laikas.count() << " s;" << endl;
+
+                        
+                        auto Rusiavimas_start = chrono::high_resolution_clock::now();
+                        pal_pav(grupe, rus_index);
+                        auto Rusiavimas_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Rusiavimas_laikas = Rusiavimas_end - Rusiavimas_start;
+                        cout << kiekis << " irasu rusiavimas pagal " << rus_index << " uztruko: " << Rusiavimas_laikas.count() << " s;" << endl;
+                        
+
+                        auto Padalinimo_start = chrono::high_resolution_clock::now();
+                        vector<Duomenys> vargsiukai;
+                        vector<Duomenys> kietiakai;
+                        padalinimas(grupe, vargsiukai);
+                        kietiakai = grupe;
+                        auto Padalinimo_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Padalinimo_laikas = Padalinimo_end - Padalinimo_start;
+                        cout <<kiekis << " irasu surusiavimas i dvi grupes uztruko: " << Padalinimo_laikas.count() << " s;"  << endl;
+
+
+                        pal_pav(kietiakai, rus_index);
+                        pal_pav(vargsiukai, rus_index);
+
+
+                        auto Kietiaku_sp_start = chrono::high_resolution_clock::now();
+                        padalinto_spausdinimas(kietiakai, "kietiakai.txt");
+                        auto Kietiaku_sp_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Kietiaku_sp_laikas = Kietiaku_sp_end - Kietiaku_sp_start;
+                        cout << kiekis << " irasu kietiaku irasymas i faila uztruko: " << Kietiaku_sp_laikas.count() << " s;" << endl;
+
+
+                        auto Vargsiuku_sp_start = chrono::high_resolution_clock::now();
+                        padalinto_spausdinimas(vargsiukai, "vargsiukai.txt");
+                        auto Vargsiuku_sp_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Vargsiuku_sp_laikas = Vargsiuku_sp_end - Vargsiuku_sp_start;
+                        cout << kiekis << " irasu vargsiuku irasymas i faila uztruko: " << Vargsiuku_sp_laikas.count() << " s;" << endl;
+                        double visas_laikas = Nuskaitymo_laikas.count() + Rusiavimas_laikas.count() + Padalinimo_laikas.count() + Kietiaku_sp_laikas.count() + Vargsiuku_sp_laikas.count();
+                        cout << kiekis << " irasu testo laikas: " << visas_laikas << " s;" << endl;
+
+                        grupe.clear();
+
+                    }
         }
-
-        int pas;
-        cout << "Jei norite tirti strategija 1 (1), jei strategija 2 (2): ";
-        cin >> pas;
-
-        Timer t;
-
-        if (pas == 1) {
-            vector<Duomenys> studentai;
-            vector<Duomenys> vargsiukai;
-            vector<Duomenys> kietiakai;
-
-            string line;
-            while (getline(failas, line)) {
-                Duomenys studentas;
-                istringstream iss(line);
-                iss >> studentas.vard >> studentas.pav;
-                int pazymys;
-                for (int i = 0; i < 5; i++) {
-                    iss >> pazymys;
-                    studentas.nd.push_back(pazymys);
-                }
-                iss >> studentas.egz;
-                studentas.galvid = skaiciuotiGalutiniVid(studentas);
-                studentai.push_back(studentas);
-            }
-
-            t.reset();
-            strategija1(studentai, vargsiukai, kietiakai);
-            cout << fileName << " Studentų rūšiavimas strategija 1 užtruko: " << t.elapsed() << " s\n";
-
-            
-            ofstream vargsiukaiFile("vargsiukai_strategija1_" + fileName);
-            ofstream kietiakaiFile("kietiakiai_strategija1_" + fileName);
-
-            for (const auto& vargsiukas : vargsiukai) {
-                vargsiukaiFile << vargsiukas.vard << " " << vargsiukas.pav << " " << vargsiukas.galvid << endl;
-            }
-
-            for (const auto& kietiakas : kietiakai) {
-                kietiakaiFile << kietiakas.vard << " " << kietiakas.pav << " " << kietiakas.galvid << endl;
-            }
-
-            vargsiukaiFile.close();
-            kietiakaiFile.close();
-        } else if (pas == 2) {
-            list<Duomenys1> studentai;
-            list<Duomenys1> vargsiukai;
-
-            string line;
-            while (getline(failas, line)) {
-                Duomenys1 studentas;
-                istringstream iss(line);
-                iss >> studentas.vard >> studentas.pav;
-                int pazymys;
-                for (int i = 0; i < 5; i++) {
-                    iss >> pazymys;
-                    studentas.nd.push_back(pazymys);
-                }
-                iss >> studentas.egz;
-                studentas.galvid = skaiciuotiGalutiniVid1(studentas);
-                studentai.push_back(studentas);
-            }
-
-            t.reset();
-            strategija2(studentai, vargsiukai);
-            cout << fileName << " Studentų rūšiavimas strategija 2 užtruko: " << t.elapsed() << " s\n";
-
-            
-            ofstream vargsiukaiFile("vargsiukai_strategija2_" + fileName);
-            for (const auto& vargsiukas : vargsiukai) {
-                vargsiukaiFile << vargsiukas.vard << " " << vargsiukas.pav << " " << vargsiukas.galvid << endl;
-            }
-
-            vargsiukaiFile.close();
-        }
-
-        failas.close();
+        return 0;
     }
 
-    return 0;
+
+
+    else if (struktura == "l")
+    {
+        list<Duomenys> grupe;
+
+
+        while (true) {
+                    string failas;
+                    cout << "Iveskite failo, kuri norite nuskaityti pavadinima (formatas: pavadinimas.txt): ";
+                    cin >> failas;
+
+                    cout << "Pagal ka noresite rusiuoti rezultatus: p - pavardes, v - vardus, g - galutini bala?\n";
+                    cin >> rus_index;
+
+                    int kiekis = kiek_sk(failas);
+
+                    for (int i = 0; i < 5; i++) {
+                        cout << endl << endl;
+                        cout << i + 1 << " nuskaitymas" << endl;
+
+                        auto Nuskaitymo_start = chrono::high_resolution_clock::now();
+                        nuskaitymas(failas, grupe);
+                        auto Nuskaitymo_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Nuskaitymo_laikas = Nuskaitymo_end - Nuskaitymo_start;
+                        cout << kiekis << " irasu nuskaitymas uztruko: " << Nuskaitymo_laikas.count() << " s;" << endl;
+
+
+                        auto Rusiavimas_start = chrono::high_resolution_clock::now();
+                        pal_pav_list(grupe, rus_index);
+                        auto Rusiavimas_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Rusiavimas_laikas = Rusiavimas_end - Rusiavimas_start;
+                        cout << kiekis << " irasu rusiavimas pagal " << rus_index << " uztruko: " << Rusiavimas_laikas.count() << " s;" << endl;
+                        
+
+                        
+                        auto Padalinimo_start = chrono::high_resolution_clock::now();
+                        list<Duomenys> vargsiukai;
+                        list<Duomenys> kietiakai;
+                        padalinimas(grupe, vargsiukai);
+                        kietiakai = grupe;
+                        auto Padalinimo_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Padalinimo_laikas = Padalinimo_end - Padalinimo_start;
+                        cout << kiekis << " irasu surusiavimas i dvi grupes uztruko: " << Padalinimo_laikas.count()  << " s;"  << endl;
+
+                        pal_pav_list(kietiakai, rus_index);
+                        pal_pav_list(vargsiukai, rus_index);
+
+                        auto Kietiaku_sp_start = chrono::high_resolution_clock::now();
+                        padalinto_spausdinimas(kietiakai, "kietiakai.txt");
+                        auto Kietiaku_sp_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Kietiaku_sp_laikas = Kietiaku_sp_end - Kietiaku_sp_start;
+                        cout << kiekis << " irasu kietiaku irasymas i faila uztruko: " << Kietiaku_sp_laikas.count() << " s;" << endl;
+
+
+                        auto Vargsiuku_sp_start = chrono::high_resolution_clock::now();
+                        padalinto_spausdinimas(vargsiukai, "vargsiukai.txt");
+                        auto Vargsiuku_sp_end = chrono::high_resolution_clock::now();
+                        chrono::duration<double> Vargsiuku_sp_laikas = Vargsiuku_sp_end - Vargsiuku_sp_start;
+                        cout << kiekis << " irasu vargsiuku irasymas i faila uztruko: " << Vargsiuku_sp_laikas.count() << " s;" << endl;
+                        double visas_laikas = Nuskaitymo_laikas.count() + Rusiavimas_laikas.count() + Padalinimo_laikas.count()  + Kietiaku_sp_laikas.count() + Vargsiuku_sp_laikas.count();
+                        cout << kiekis << " irasu testo laikas: " << visas_laikas << " s;" << endl;
+
+                        grupe.clear();
+
+                    }
+        }
+        return 0;
+
+    }
+
+
 }
