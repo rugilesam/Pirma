@@ -21,3 +21,11 @@ List konteinerio atveju
 |  100 000         | 0,02241 s       |  0,01159 s     | 0,03870 s    |
 |  1 000 000       | 0,02552 s       |  0,19847 s     | 0,25059 s    |
 |  10 000 000      | 3,12088 s       |  2,03054 s     | 2,53735 s    |
+
+Kompiuterio duomenys:
+
+CPU - Apple M1 chip 8-core CPU with 4 perform­ance cores and 4 efficiency cores
+
+RAM - 16 GB
+
+HDD - 256 GB SSD
