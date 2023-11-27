@@ -1,7 +1,10 @@
 # Pirma
 
+Nuo v1.0 kodas perrašytas nuo pagrindų.
 
-Vector konteinerio atveju
+Lyginu 3 strategijas, su vector ir list konteineriu.
+
+Vector konteinerio atveju:
 
 |   Studentų skaičius   |  1 strategija   |  2 startegija  | 3 strategija |
 | -----------------|:---------------:|:--------------:|:------------:|
@@ -12,7 +15,7 @@ Vector konteinerio atveju
 |  10 000 000      | 1,80472 s       |  0,37068 s     | 0,70251 s    |
 
 
-List konteinerio atveju
+List konteinerio atveju:
 
 |   Studentų skaičius  |  1 strategija   |  2 startegija  | 3 strategija |
 | -----------------|:---------------:|:--------------:|:------------:|
@@ -21,6 +24,8 @@ List konteinerio atveju
 |  100 000         | 0,02241 s       |  0,01159 s     | 0,03870 s    |
 |  1 000 000       | 0,02552 s       |  0,19847 s     | 0,25059 s    |
 |  10 000 000      | 3,12088 s       |  2,03054 s     | 2,53735 s    |
+
+Išvada: Vector konteineris greitesnis rūšiavimas, nei list. Bei 2 strategija greičiausia.
 
 Kompiuterio duomenys:
 
