@@ -6,3 +6,11 @@
 |std::vector "Kietiakai.txt" | 0.0292 s | 0.0926 s | 0.5955 s | 5.6554 s | 58.8275 s |
 |std::list "Vargsiukai.txt" | 0.0263 s | 0.0849 s | 0.5148 s | 5.2316 s | 50.4858 s |
 |std::list "Kietiakai.txt" |0.0264 s | 0.0849 s | 0.5148 s | 5.2317 s | 50.4859 s |
+
+Kompiuterio duomenys:
+
+CPU - Apple M1 chip 8-core CPU with 4 perform­ance cores and 4 efficiency cores
+
+RAM - 16 GB
+
+HDD - 256 GB SSD
